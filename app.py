@@ -25,6 +25,10 @@ class Produto:
         
     @staticmethod
     def buscar_todos():
+        """
+        Método estático para buscar todos os produtos no banco de dados.
+        Retorna uma lista de objetos Produto.
+        """
         cnx = get_db_connection()
         cursor = cnx.cursor()
         cursor.execute("SELECT * FROM produto")
@@ -47,6 +51,9 @@ class Produto:
         return None
 
     def salvar(self):
+        """
+        Método para salvar as alterações de um produto no banco de dados.
+        """
         cnx = get_db_connection()
         cursor = cnx.cursor()
         query = "UPDATE produto SET nome=%s, descricao=%s, preco=%s WHERE id=%s"
@@ -56,17 +63,24 @@ class Produto:
         
     @staticmethod
     def criar(nome, descricao, preco):
+        """
+        Método estático para criar um novo produto no banco de dados.
+        Retorna um objeto Produto criado.
+        """
         cnx = get_db_connection()
         cursor = cnx.cursor()
         query = "INSERT INTO produto (nome, descricao, preco) VALUES (%s, %s, %s)"
         cursor.execute(query, (nome, descricao, preco))
         cnx.commit()
-        id = cursor.lastrowid  # Obtém o ID do último produto inserido
+        id = cursor.lastrowid  
         cursor.close()
         return Produto(id, nome, descricao, preco)
     
     @staticmethod
     def deletar(id):
+        """
+        Método estático para deletar um produto do banco de dados pelo ID.
+        """
         cnx = get_db_connection()
         cursor = cnx.cursor()
         query = "DELETE FROM produto WHERE id = %s"
@@ -76,6 +90,10 @@ class Produto:
 
 @app.route('/produtos', methods=['GET'])
 def get_produtos():
+    """
+    Endpoint para obter todos os produtos.
+    Retorna uma lista de produtos se o usuário estiver logado, caso contrário, redireciona para a página de login.
+    """
     if 'logged_in' in session and session['logged_in']:
         produtos = Produto.buscar_todos()
         lista_produtos = [produto.__dict__ for produto in produtos]
@@ -85,15 +103,27 @@ def get_produtos():
 
 @app.route('/produtos', methods=['POST'])
 def add_produto():
+    """
+    Endpoint para adicionar um novo produto.
+    Recebe os dados do produto no formato JSON e os adiciona ao banco de dados.
+    Retorna uma mensagem de sucesso e os dados do produto adicionado.
+    """
     novo_produto = request.json
     nome = novo_produto['nome']
     descricao = novo_produto['descricao']
     preco = novo_produto['preco']
     produto = Produto.criar(nome, descricao, preco)
+    
+    #produto.__dict__ é um objeto da classe Produto retornado em forma de dicionário contendo os atributos do objeto
     return jsonify({'mensagem': 'Produto adicionado com sucesso', 'produto': produto.__dict__}), 201
 
 @app.route('/produtos/<int:id>', methods=['PUT'])
 def update_produto(id):
+    """
+    Endpoint para atualizar um produto existente.
+    Recebe os dados do produto atualizado no formato JSON e os atualiza no banco de dados.
+    Retorna uma mensagem de sucesso e os dados do produto atualizado.
+    """
     produto_atualizado = request.json
     produto = Produto.buscar_por_id(id)
     if produto:
@@ -106,16 +136,25 @@ def update_produto(id):
 
 @app.route('/produtos/<int:id>', methods=['DELETE'])
 def delete_produto(id):
+    """
+    Endpoint para excluir um produto existente.
+    Exclui o produto do banco de dados pelo ID.
+    Retorna uma mensagem de sucesso.
+    """
     Produto.deletar(id)
     return jsonify({'mensagem': 'Produto excluído com sucesso'}), 200
 
 @app.route('/')
 def produtos():
+    '''
+    Verifica se o usuário está logado, verificando se a chave 'logged_in' está presente na sessão
+    e se está definida como True
+    '''
     if 'logged_in' in session and session['logged_in']:
         produtos = Produto.buscar_todos()
         return render_template('home.html', produtos=produtos)
     else:
-        return render_template('login.html')
+        return redirect(url_for('login'))
 
 @app.route('/editar/<int:id>')
 def editar(id):
@@ -146,29 +185,27 @@ def register():
 @app.route('/login', methods=['GET', 'POST'])
 def login():
     if request.method == 'POST':
-        email = request.form['email']
-        password = request.form['password']
+        email = request.form['email'] #obtém o email enviado no formulário
+        password = request.form['password'] # obtém a senha enviada no formulário
 
         try:
-            cnx = get_db_connection()  # Supondo que você tenha uma função get_db_connection() definida em algum lugar
+            cnx = get_db_connection() 
             cursor = cnx.cursor()
             query = "SELECT * FROM users WHERE email = %s"
             cursor.execute(query, (email,))
-            user = cursor.fetchone()
+            user = cursor.fetchone() #busca o usuário com o email fornecido no banco de dados
 
             if user and check_password_hash(user[3], password):
                 # Autenticação bem-sucedida
                 session['logged_in'] = True
                 session['user_email'] = email
-                return redirect(url_for('produtos'))  # Redireciona para a rota '/'
-            else:
-                # Autenticação inválidas
-                return jsonify({'erro': 'Credenciais inválidas'}), 401
+                return redirect(url_for('produtos'))  #Redireciona para a rota '/'
 
         except Exception as e:
             return jsonify({'erro': str(e)}), 500
-
-    return render_template('login.html')
+        
+    #Renderiza a página de login caso a requisição seja do tipo GET
+    return render_template('login.html', erro="Credenciais inválidas")
 
 @app.route('/logout', methods=['POST'])
 def logout():

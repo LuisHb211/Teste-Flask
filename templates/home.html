@@ -8,7 +8,6 @@
 </head>
 <body>
     <h1>Lista de Produtos</h1>
-    <!-- Adicione o botão de logout aqui -->
     <form action="/logout" method="POST">
         <button type="submit" class="logout-button">Logout</button>
     </form>
@@ -19,7 +18,7 @@
                 <th>Nome</th>
                 <th>Descrição</th>
                 <th>Preço</th>
-                <th>Ações</th> <!-- Nova coluna para as ações -->
+                <th>Ações</th> 
             </tr>
         </thead>
         <tbody>
@@ -30,9 +29,7 @@
                 <td>{{ produto.descricao }}</td>
                 <td>{{ produto.preco }}</td>
                 <td>
-                    <!-- Botão para editar -->
                     <a href="/editar/{{ produto.id }}">Editar</a>
-                    <!-- Botão para excluir com JavaScript -->
                     <button onclick="deletarProduto({{ produto.id }})">Excluir</button>
                 </td>
             </tr>
@@ -40,7 +37,6 @@
         </tbody>
     </table>
 
-    <!-- Formulário para adicionar um novo produto -->
     <h2>Adicionar Novo Produto</h2>
     <form id="formAdicionar" action="/produtos" method="POST">
         <label for="nome">Nome:</label>
@@ -58,10 +54,9 @@
                 fetch('/produtos/' + id, { method: 'DELETE' })
                     .then(response => {
                         if (response.ok) {
-                            // Produto excluído com sucesso, recarregar a página para atualizar a lista
+                            // Recarrega a página para atualizar a lista, caso dê tudo certo
                             location.reload();
                         } else {
-                            // Se ocorrer um erro ao excluir o produto, exibir uma mensagem de erro
                             alert('Erro ao excluir o produto');
                         }
                     })
@@ -71,21 +66,21 @@
 
         // Função para adicionar um novo produto
         document.getElementById('formAdicionar').addEventListener('submit', function(event) {
-            event.preventDefault(); // Evita o comportamento padrão do formulário
+            event.preventDefault(); // Evita que o formulário volte vazio
 
             // Obtém os valores do formulário
             var nome = document.getElementById('nome').value;
             var descricao = document.getElementById('descricao').value;
             var preco = document.getElementById('preco').value;
 
-            // Cria um objeto com os dados do novo produto
+            // Cria um novo objeto, com as variáveis adquiridas no html
             var novoProduto = {
                 nome: nome,
                 descricao: descricao,
                 preco: preco
             };
 
-            // Envia uma requisição POST para adicionar o novo produto
+            // Envia uma requisição POST para a rota /produtos
             fetch('/produtos', {
                 method: 'POST',
                 headers: {
@@ -95,10 +90,10 @@
             })
             .then(response => {
                 if (response.ok) {
-                    // Produto adicionado com sucesso, recarregar a página para atualizar a lista
+                    // Recarregar a página para atualizar a lista
                     location.reload();
                 } else {
-                    // Se ocorrer um erro ao adicionar o produto, exibir uma mensagem de erro
+                    // Exibie uma mensagem de erro se nao for adicionado corretamente
                     alert('Erro ao adicionar o produto');
                 }
             })
