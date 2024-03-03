@@ -1,0 +1,141 @@
+/* Estilos gerais */
+body {
+    font-family: Arial, sans-serif;
+    margin: 0;
+    padding: 0;
+}
+
+h1, h2 {
+    text-align: center;
+}
+
+/* Estilos para o formulário de adicionar produto */
+#form-container {
+    width: 50%;
+    margin: 20px auto;
+    padding: 20px;
+    background-color: #f9f9f9;
+    border-radius: 5px;
+}
+
+#produto-form label {
+    display: block;
+    margin-bottom: 5px;
+}
+
+#produto-form input[type="text"],
+#produto-form input[type="number"],
+#produto-form textarea {
+    width: 100%;
+    padding: 8px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#produto-form button {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px 20px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+#produto-form button:hover {
+    background-color: #45a049;
+}
+
+/* Estilos para a tabela de produtos */
+#produtos-container {
+    width: 80%;
+    margin: 20px auto;
+}
+
+table {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+table, th, td {
+    border: 1px solid #ddd;
+}
+
+th, td {
+    padding: 8px;
+    text-align: left;
+}
+
+th {
+    background-color: #f2f2f2;
+}
+
+/* Estilos para o botão de exclusão na tabela de produtos */
+td:last-child {
+    text-align: center;
+}
+
+td:last-child button {
+    padding: 5px 10px;
+    background-color: #ff0000;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+td:last-child button:hover {
+    background-color: #e60000;
+}
+
+/* Estilos para o formulário de adicionar novo produto */
+#formAdicionar {
+    background-color: #f9f9f9;
+    padding: 20px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-top: 40px;
+}
+
+#formAdicionar label {
+    font-weight: bold;
+    color: #333;
+}
+
+#formAdicionar input[type="text"],
+#formAdicionar textarea,
+#formAdicionar button[type="submit"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    box-sizing: border-box;
+}
+
+#formAdicionar button[type="submit"] {
+    background-color: #28a745;
+    color: #fff;
+    border: none;
+    cursor: pointer;
+}
+
+#formAdicionar button[type="submit"]:hover {
+    background-color: #218838;
+}
+
+.logout-button {
+    background-color: #f44336; /* Cor de fundo do botão */
+    color: white; /* Cor do texto do botão */
+    border: none; /* Remove a borda do botão */
+    padding: 10px 20px; /* Espaçamento interno do botão */
+    cursor: pointer; /* Altera o cursor ao passar sobre o botão */
+    border-radius: 5px; /* Borda arredondada */
+    transition: background-color 0.3s; /* Transição suave da cor de fundo */
+}
+
+/* Estilo para o botão de logout ao passar o mouse */
+.logout-button:hover {
+    background-color: #d32f2f; /* Cor de fundo do botão ao passar o mouse */
+}

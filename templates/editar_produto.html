@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="/static/styles2.css">
+    <title>Editar Produto</title>
+</head>
+<body>
+    <h1>Editar Produto</h1>
+    <form id="editarProdutoForm" action="/produtos/{{ produto.id }}" method="PUT">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" value="{{ produto.nome }}"><br>
+        <label for="descricao">Descrição:</label>
+        <textarea id="descricao" name="descricao">{{ produto.descricao }}</textarea><br>
+        <label for="preco">Preço:</label>
+        <input type="text" id="preco" name="preco" value="{{ produto.preco }}"><br>
+        <button type="submit">Salvar</button>
+    </form>
+
+    <!-- Visualizar as propriedades do produto -->
+    <h2>Detalhes do Produto</h2>
+    <p>ID: {{ produto.id }}</p>
+    <p>Nome: {{ produto.nome }}</p>
+    <p>Descrição: {{ produto.descricao }}</p>
+    <p>Preço: {{ produto.preco }}</p>
+
+    <script>
+        document.getElementById('editarProdutoForm').addEventListener('submit', function(event) {
+            event.preventDefault(); // Impede o comportamento padrão do formulário
+
+            // Obtém os valores atualizados do formulário
+            var nome = document.getElementById('nome').value;
+            var descricao = document.getElementById('descricao').value;
+            var preco = document.getElementById('preco').value;
+
+            // Cria um objeto com os dados atualizados do produto
+            var produtoAtualizado = {
+                nome: nome,
+                descricao: descricao,
+                preco: preco
+            };
+
+            // Obtém o ID do produto
+            var produtoId = {{ produto.id }};
+
+            // Constrói a URL para a requisição PUT com o ID do produto
+            var url = '/produtos/' + produtoId;
+
+            // Envia uma requisição PUT para atualizar o produto
+            fetch(url, {
+                method: 'PUT',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(produtoAtualizado)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Produto atualizado com sucesso, redirecionar para a página inicial ou exibir uma mensagem de sucesso
+                    window.location.href = '/'; // Redireciona para a página inicial
+                } else {
+                    // Se ocorrer um erro ao atualizar o produto, exibir uma mensagem de erro
+                    alert('Erro ao atualizar o produto');
+                }
+            })
+            .catch(error => console.error('Erro ao atualizar o produto:', error));
+        });
+    </script>
+</body>
+</html>

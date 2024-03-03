@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>CRUD de Produtos</title>
+    <link rel="stylesheet" href="/static/styles.css">
+</head>
+<body>
+    <h1>Lista de Produtos</h1>
+    <!-- Adicione o botão de logout aqui -->
+    <form action="/logout" method="POST">
+        <button type="submit" class="logout-button">Logout</button>
+    </form>
+    <table>
+        <thead>
+            <tr>
+                <th>ID</th>
+                <th>Nome</th>
+                <th>Descrição</th>
+                <th>Preço</th>
+                <th>Ações</th> <!-- Nova coluna para as ações -->
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+            <tr>
+                <td>{{ produto.id }}</td>
+                <td>{{ produto.nome }}</td>
+                <td>{{ produto.descricao }}</td>
+                <td>{{ produto.preco }}</td>
+                <td>
+                    <!-- Botão para editar -->
+                    <a href="/editar/{{ produto.id }}">Editar</a>
+                    <!-- Botão para excluir com JavaScript -->
+                    <button onclick="deletarProduto({{ produto.id }})">Excluir</button>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <!-- Formulário para adicionar um novo produto -->
+    <h2>Adicionar Novo Produto</h2>
+    <form id="formAdicionar" action="/produtos" method="POST">
+        <label for="nome">Nome:</label>
+        <input type="text" id="nome" name="nome" required><br>
+        <label for="descricao">Descrição:</label>
+        <input type="text" id="descricao" name="descricao" required><br>
+        <label for="preco">Preço:</label>
+        <input type="number" id="preco" name="preco" required><br>
+        <button type="submit">Adicionar Produto</button>
+    </form>
+
+    <script>
+        function deletarProduto(id) {
+            if (confirm('Tem certeza que deseja excluir este produto?')) {
+                fetch('/produtos/' + id, { method: 'DELETE' })
+                    .then(response => {
+                        if (response.ok) {
+                            // Produto excluído com sucesso, recarregar a página para atualizar a lista
+                            location.reload();
+                        } else {
+                            // Se ocorrer um erro ao excluir o produto, exibir uma mensagem de erro
+                            alert('Erro ao excluir o produto');
+                        }
+                    })
+                    .catch(error => console.error('Erro ao excluir o produto:', error));
+            }
+        }
+
+        // Função para adicionar um novo produto
+        document.getElementById('formAdicionar').addEventListener('submit', function(event) {
+            event.preventDefault(); // Evita o comportamento padrão do formulário
+
+            // Obtém os valores do formulário
+            var nome = document.getElementById('nome').value;
+            var descricao = document.getElementById('descricao').value;
+            var preco = document.getElementById('preco').value;
+
+            // Cria um objeto com os dados do novo produto
+            var novoProduto = {
+                nome: nome,
+                descricao: descricao,
+                preco: preco
+            };
+
+            // Envia uma requisição POST para adicionar o novo produto
+            fetch('/produtos', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(novoProduto)
+            })
+            .then(response => {
+                if (response.ok) {
+                    // Produto adicionado com sucesso, recarregar a página para atualizar a lista
+                    location.reload();
+                } else {
+                    // Se ocorrer um erro ao adicionar o produto, exibir uma mensagem de erro
+                    alert('Erro ao adicionar o produto');
+                }
+            })
+            .catch(error => console.error('Erro ao adicionar o produto:', error));
+        });
+    </script>
+</body>
+</html>
