@@ -2,7 +2,7 @@
 
 Aplicação desenvolvida em Python, FLASK e MySQL
 
-### Instalação
+## Instalação
 
 Para clonar o repositório na sua máquina basta clonar:
 ```
@@ -34,7 +34,7 @@ tabela users deve ter 'id', 'name', 'email', 'password'
 Após ter completado os requisitos, basta abrir o arquivo app.py e executá-lo. Caso esteja no Visual Studio Code, vá em "Run Python File". No canto superior direito, clique na seta apontando para baixo ao lado do botão de reprodução, ou simplesmente pressione F5. No console, será exibido o local/porta em que o programa está sendo executado. Basta abri-lo no navegador da internet, ou segurar Ctrl e clicar no link.
 
 
-### Explicando o código
+## Explicando o código
 
 O arquivo db_connection.py tem a finalidade de estabelecer uma conexão com um banco de dados MySQL. Ele é responsável por carregar as informações de acesso ao banco de dados a partir de um arquivo .env, utilizando a função load_dotenv, e então utiliza essas credenciais para estabelecer a conexão com o banco de dados por meio da biblioteca mysql.connector.
 
